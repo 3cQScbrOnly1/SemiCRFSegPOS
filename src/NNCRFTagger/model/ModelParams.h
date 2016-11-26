@@ -23,7 +23,7 @@ public:
 	Alphabet _seg_label_alpha;
 	vector<Alphabet> _type_alphas;
 public: 
-	bool initial(HyperParams& hyper_params){
+	bool initial(HyperParams& hyper_params, AlignedMemoryPool* mem = NULL){
 		if (_words.nVSize <= 0){
 			std::cout << "Please initialize embeddings before this." << std::endl;
 			return false;
@@ -42,11 +42,11 @@ public:
 		hyper_params.labelSize = _label_alpha.size();
 		hyper_params.inputSize = hyper_params.wordWindow * hyper_params.unitSize;
 
-		_tanh1_project.initial(hyper_params.hiddenSize, hyper_params.inputSize, true);
-		_left_lstm_project.initial(hyper_params.rnnHiddenSize, hyper_params.hiddenSize);
-		_right_lstm_project.initial(hyper_params.rnnHiddenSize, hyper_params.hiddenSize);
-		_tanh2_project.initial(hyper_params.hiddenSize, hyper_params.rnnHiddenSize, hyper_params.rnnHiddenSize, true);
-		_olayer_linear.initial(hyper_params.labelSize, hyper_params.hiddenSize, false);
+		_tanh1_project.initial(hyper_params.hiddenSize, hyper_params.inputSize, true, mem);
+		_left_lstm_project.initial(hyper_params.rnnHiddenSize, hyper_params.hiddenSize, mem);
+		_right_lstm_project.initial(hyper_params.rnnHiddenSize, hyper_params.hiddenSize, mem);
+		_tanh2_project.initial(hyper_params.hiddenSize, hyper_params.rnnHiddenSize, hyper_params.rnnHiddenSize, true, mem);
+		_olayer_linear.initial(hyper_params.labelSize, hyper_params.hiddenSize, false, mem);
 		_loss.initial(hyper_params.labelSize);
 
 		return true;
